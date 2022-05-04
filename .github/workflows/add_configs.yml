@@ -33,7 +33,22 @@ jobs:
         DEST="ec2-user@$IP_ADDRESS:/home/ec2-user"
         echo "${{ secrets.SSH_KEY }}" > rocinante.key
         chmod 0600 rocinante.key
-        ls -l
-        ssh -i rocinante.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "mkdir /home/ec2-user/configs"
         rsync -chav --delete -e 'ssh -i ./rocinante.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ' ./configs/ $DEST
-        
+        rsync -chav --delete -e 'ssh -i ./rocinante.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ' ./real_rocinante.cert $DEST
+        echo "Stop services"
+        ssh -i rocinante.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo systemctl stop nginx"
+        ssh -i rocinante.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo systemctl stop php-fpm"
+        ssh -i rocinante.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo systemctl stop mysqld"
+        echo "Remove configs"
+        ssh -i rocinante.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo rm -f /etc/my.cnf"
+        ssh -i rocinante.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo rm -f /etc/php.ini"
+        ssh -i rocinante.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo rm -f /etc/nginx/nginx.conf"
+        echo "Put configs"
+        ssh -i rocinante.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo mv ./my.cnf /etc/"
+        ssh -i rocinante.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo mv ./php.ini /etc/"
+        ssh -i rocinante.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo mv ./{basic.conf,gzip.conf,nginx.conf,limits.conf,tls.conf,zone_limits.conf} /etc/nginx/conf.d/"
+        ssh -i rocinante.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo mv ./nginx.conf /etc/nginx/"
+        echo "Start services"
+        ssh -i rocinante.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo systemctl start mysqld"
+        ssh -i rocinante.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo systemctl start php-fpm"
+        ssh -i rocinante.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo systemctl start nginx"
