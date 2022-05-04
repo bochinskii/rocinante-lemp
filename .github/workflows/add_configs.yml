@@ -1,4 +1,4 @@
-name: Deploy_lemp
+name: Add_configs
 
 on:
   workflow_dispatch:
