@@ -34,5 +34,5 @@ jobs:
         echo "${{ secrets.SSH_KEY }}" > rocinante.key
         chmod 0600 rocinante.key
         ls -l
-        ssh -i rocinante.key -p 1820 -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "uname -a"
+        ssh -i rocinante.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "uname -a"
         
