@@ -12,8 +12,6 @@ env:
 jobs:
 
   CI_part:
-    env:
-      PACKAGE_NAME: rocinante_${{ github.sha }}.zip
     
     runs-on: ubuntu-latest
 
@@ -27,3 +25,7 @@ jobs:
         aws-access-key-id: ${{ secrets.GH_ACTION_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.GH_ACTION_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION_NAME }}
+    
+    - name: Sync
+      run: |
+        echo "${{ secrets.USER_DATA_SCRIPT }}" > user_data.base64.sh
