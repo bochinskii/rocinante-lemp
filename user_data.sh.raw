@@ -373,9 +373,7 @@ cat << EOF > /etc/logrotate.d/php-fpm
 }
 EOF
 
-chmod 0666 /etc/logrotate.d/mysql
-
-$ sudo cat << EOF > /etc/logrotate.d/mysql
+sudo cat << EOF > /etc/logrotate.d/mysql
 /var/log/mysqld.log {
     create 640 mysql mysql
     notifempty
