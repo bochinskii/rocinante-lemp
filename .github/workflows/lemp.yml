@@ -29,3 +29,4 @@ jobs:
     - name: Sync
       run: |
         echo "${{ secrets.USER_DATA_SCRIPT }}" > user_data.base64.sh
+        ls -l
