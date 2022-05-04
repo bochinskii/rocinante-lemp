@@ -35,7 +35,7 @@ jobs:
         --associate-public-ip-address \
         --security-group-ids sg-061ddb8453ccbf935 sg-004c28689f21a4a77 --key-name bochinskii_Frankfurt_2 \
         --iam-instance-profile Name=S3ReadOnlyRoleForbochinskii.rocinante \
-        --user-data file://user_data.base64.sh
+        --user-data file://user_data.base64.sh \
         --block-device-mappings file://block_device_mappings.json \
         --tag-specifications file://tag_specifications.json
         
