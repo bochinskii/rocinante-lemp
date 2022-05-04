@@ -34,5 +34,5 @@ jobs:
         echo "${{ secrets.SSH_KEY }}" > rocinante.key
         chmod 0600 rocinante.key
         ls -l
-        rsync -chav --delete -e 'ssh -i ./rocinante.key -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }}' ./README.md $DEST
+        ssh -i rocinante.key -p ${{ secrets.SSH_PORT }} ec2-user@$IP_ADDRESS uname -a
         
