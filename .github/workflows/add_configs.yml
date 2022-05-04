@@ -34,6 +34,6 @@ jobs:
         echo "${{ secrets.SSH_KEY }}" > rocinante.key
         chmod 0600 rocinante.key
         ls -l
-        ssh -i rocinante.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "mkdir configs"
+        ssh -i rocinante.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "mkdir /home/ec2-user/configs"
         rsync -chav --delete -e 'ssh -i ./rocinante.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ' ./configs/ $DEST
         
