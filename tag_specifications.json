@@ -1,0 +1,20 @@
+[
+  {
+    "ResourceType": "instance",
+    "Tags": [
+      {
+        "Key": "Name",
+        "Value": "rocinante"
+      }
+    ]
+  },
+  {
+    "ResourceType": "volume",
+    "Tags": [
+      {
+        "Key": "Name",
+        "Value": "root-rocinante"
+      }
+    ]
+  }
+]
