@@ -1,4 +1,4 @@
-name: test
+name: add_configs_v2
 
 on:
   workflow_dispatch:
