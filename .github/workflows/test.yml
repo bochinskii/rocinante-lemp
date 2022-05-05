@@ -50,3 +50,31 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         source: "configs/*,real_rocinante.cert,real_rocinante.key"
         target: "/home/ec2-user"
+    
+    - name: multiple command
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ env.IP_ADDRESS }}
+        username: ec2-user
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          sudo systemctl stop nginx
+          sudo systemctl stop php-fpm
+          sudo systemctl stop mysqld
+          sudo chown -R root: /home/ec2-user/configs
+          sudo chown root: /home/ec2-user/real_rocinante.*
+          sudo rm -f /etc/my.cnf
+          sudo rm -f /etc/php.ini
+          sudo rm -f /etc/nginx/nginx.conf
+          sudo rm -f /etc/nginx/tls/${{ env.SSL_CERT }}
+          sudo rm -f /etc/nginx/tls/${{ env.SSL_KEY }}
+          sudo mv ./configs/my.cnf /etc/
+          sudo mv ./configs/php.ini /etc/
+          sudo mv ./configs/{basic.conf,gzip.conf,nginx.conf,limits.conf,tls.conf,zone_limits.conf} /etc/nginx/conf.d/"
+          sudo mv ./configs/nginx.conf /etc/nginx/
+          sudo mv ./real_rocinante.cert /etc/nginx/tls/${{ env.SSL_CERT }}
+          sudo mv ./real_rocinante.key /etc/nginx/tls/${{ SSL_KEY }}"
+          sudo systemctl start mysqld
+          sudo systemctl start php-fpm
+          sudo systemctl start nginx
