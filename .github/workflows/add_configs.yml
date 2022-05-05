@@ -37,7 +37,7 @@ jobs:
         echo "${{ secrets.REAL_KEY }}" > real_rocinante.key
         chmod 0600 rocinante_ssh.key
         chmod 0600 real_rocinante.key
-        rsync -chav --delete -e 'ssh -i ./rocinante_ssh.key -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }}' ./configs/ ec2-user@$IP_ADDRESS:/home/ec2-user
+        scp -i ./rocinante_ssh.key -o StrictHostKeyChecking=no -P 1820 ./configs/* ec2-user@$IP_ADDRESS:/home/ec2-user
         echo "Stop services"
         ssh -i rocinante_ssh.key -p ${{ secrets.SSH_PORT }} ec2-user@$IP_ADDRESS "sudo systemctl stop nginx"
         ssh -i rocinante_ssh.key -p ${{ secrets.SSH_PORT }} ec2-user@$IP_ADDRESS "sudo systemctl stop php-fpm"
