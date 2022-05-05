@@ -74,7 +74,7 @@ jobs:
           sudo mv ./configs/{basic.conf,gzip.conf,nginx.conf,limits.conf,tls.conf,zone_limits.conf} /etc/nginx/conf.d/"
           sudo mv ./configs/nginx.conf /etc/nginx/
           sudo mv ./real_rocinante.cert /etc/nginx/tls/${{ env.SSL_CERT }}
-          sudo mv ./real_rocinante.key /etc/nginx/tls/${{ SSL_KEY }}"
+          sudo mv ./real_rocinante.key /etc/nginx/tls/${{ env.SSL_KEY }}"
           sudo systemctl start mysqld
           sudo systemctl start php-fpm
           sudo systemctl start nginx
