@@ -30,7 +30,7 @@ jobs:
     - name: Get Variables
       run: |
         IP_ADDRESS=`aws ec2 describe-instances --filters "Name=tag:Name,Values=rocinante" --query "Reservations[*].Instances[*].{IP:PublicIpAddress}" --output text`
-        echo $IP_ADDRESS >> ${{ env.GITHUB_ENV }}
+        echo "$IP_ADDRESS" >> $GITHUB_ENV
          
     - name: Test
       run: echo $IP_ADDRESS
