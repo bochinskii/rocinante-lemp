@@ -40,7 +40,9 @@ jobs:
         chmod 0600 real_rocinante.key
         ls -l
         rsync -chav --delete -e 'ssh -i ./rocinante_ssh.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ' ./configs/ $DEST
+        sleep 15s
         rsync -chav --delete -e 'ssh -i ./rocinante_ssh.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ' ./real_rocinante.cert $DEST
+        sleep 15s
         rsync -chav --delete -e 'ssh -i ./rocinante_ssh.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ' ./real_rocinante.key $DEST
         echo "Stop services"
         ssh -i rocinante_ssh.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo systemctl stop nginx"
