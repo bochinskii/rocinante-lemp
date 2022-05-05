@@ -10,6 +10,7 @@
 Status of our Actions:
 </p>
 <img src="https://github.com/bochinskii/rocinante-lemp/workflows/Deploy_lemp/badge.svg?branch=main"><br>
+<img src="https://github.com/bochinskii/rocinante-lemp/workflows/Add_configs/badge.svg?branch=main"><br>
 <p>
 Denis Bochinskii
 </p>
