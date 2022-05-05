@@ -12,11 +12,11 @@ env:
 jobs:
 
   CI_part:
-    
-    runs-on: ubuntu-18.04
+
+    runs-on: ubuntu-latest
 
     steps:
-    
+
     - name: Clone repository
       uses: actions/checkout@v3
 
@@ -26,34 +26,40 @@ jobs:
         aws-access-key-id: ${{ secrets.GH_ACTION_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.GH_ACTION_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION_NAME }}
-    
+
     - name: Sync
       env:
         SSL_CERT: rocinante.crt
         SSL_KEY: rocinante.key
       run: |
-        sudo useradd -m ec2-user
-        sudo su -l ec2-user
-        id
-        IP_ADDRESS=`aws ec2 describe-instances --filters "Name=tag:Name,Values=rocinante" --query "Reservations[*].Instances[*].{IP:PublicIpAddress}" --output text`
+        export IP_ADDRESS=`aws ec2 describe-instances --filters "Name=tag:Name,Values=rocinante" --query "Reservations[*].Instances[*].{IP:PublicIpAddress}" --output text`
+        export DEST="ec2-user@$IP_ADDRESS:/home/ec2-user"
         echo "${{ secrets.SSH_KEY }}" > rocinante_ssh.key
         echo "${{ secrets.REAL_KEY }}" > real_rocinante.key
-        chmod 0400 rocinante_ssh.key
-        chmod 0400 real_rocinante.key
-        scp -i ./rocinante_ssh.key -o StrictHostKeyChecking=no -P 1820 ./configs/nginx.conf ec2-user@$IP_ADDRESS:/home/ec2-user
+        chmod 0600 rocinante_ssh.key
+        chmod 0600 real_rocinante.key
+        rsync -chav --delete -e 'ssh -i ./rocinante.key -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }}' ./configs/ $DEST
+        rsync -chav --delete -e 'ssh -i ./rocinante.key -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }}' ./real_rocinante.cert $DEST
+        rsync -chav --delete -e 'ssh -i ./rocinante.key -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }}' ./real_rocinante.key $DEST
         echo "Stop services"
-        ssh -i rocinante_ssh.key -p ${{ secrets.SSH_PORT }} ec2-user@$IP_ADDRESS "sudo systemctl stop nginx"
-        ssh -i rocinante_ssh.key -p ${{ secrets.SSH_PORT }} ec2-user@$IP_ADDRESS "sudo systemctl stop php-fpm"
-        ssh -i rocinante_ssh.key -p ${{ secrets.SSH_PORT }} ec2-user@$IP_ADDRESS "sudo systemctl stop mysqld"
+        ssh -i rocinante_ssh.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo systemctl stop nginx"
+        ssh -i rocinante_ssh.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo systemctl stop php-fpm"
+        ssh -i rocinante_ssh.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo systemctl stop mysqld"
         echo "Remove configs"
         ssh -i rocinante_ssh.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo rm -f /etc/my.cnf"
         ssh -i rocinante_ssh.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo rm -f /etc/php.ini"
         ssh -i rocinante_ssh.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo rm -f /etc/nginx/nginx.conf"
+        echo "Remove self sined cert and key"
+        ssh -i rocinante_ssh.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo rm -f /etc/nginx/tls/$SSL_CERT"
+        ssh -i rocinante_ssh.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo rm -f /etc/nginx/tls/$SSL_KEY"
         echo "Put configs"
         ssh -i rocinante_ssh.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo mv ./my.cnf /etc/"
         ssh -i rocinante_ssh.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo mv ./php.ini /etc/"
         ssh -i rocinante_ssh.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo mv ./{basic.conf,gzip.conf,nginx.conf,limits.conf,tls.conf,zone_limits.conf} /etc/nginx/conf.d/"
         ssh -i rocinante_ssh.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo mv ./nginx.conf /etc/nginx/"
+        echo "Put real cert and key"
+        ssh -i rocinante_ssh.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo mv ./real_rocinante.cert /etc/nginx/tls/$SSL_CERT"
+        ssh -i rocinante_ssh.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo mv ./real_rocinante.key /etc/nginx/tls/$SSL_KEY"
         echo "Start services"
         ssh -i rocinante_ssh.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo systemctl start mysqld"
         ssh -i rocinante_ssh.key -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ec2-user@$IP_ADDRESS "sudo systemctl start php-fpm"
