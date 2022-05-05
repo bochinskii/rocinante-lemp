@@ -38,16 +38,16 @@ jobs:
     
     - name: Get Variables
       run: |
-        IP_ADDRESS=`aws ec2 describe-instances --filters "Name=tag:Name,Values=rocinante" --query "Reservations[*].Instances[*].{IP:PublicIpAddress}" --output text`
-        echo "IP_ADDRESS=$IP_ADDRESS" >> "$GITHUB_ENV"
+        IP=`aws ec2 describe-instances --filters "Name=tag:Name,Values=rocinante" --query "Reservations[*].Instances[*].{IP:PublicIpAddress}" --output text`
+        echo "IP=$IP" >> "$GITHUB_ENV"
     
     - name: Test
-      run: echo ${{ env.IP_ADDRESS }}
+      run: echo ${{ env.IP }}
       
     - name: copy file via ssh key
       uses: appleboy/scp-action@master
       with:
-        host: ${{ env.IP_ADDRESS }}
+        host: ${{ env.IP }}
         username: ec2-user
         port: ${{ secrets.SSH_PORT }}
         key: ${{ secrets.SSH_KEY }}
@@ -57,7 +57,7 @@ jobs:
     - name: multiple command
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ env.IP_ADDRESS }}
+        host: ${{ env.IP }}
         username: ec2-user
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
