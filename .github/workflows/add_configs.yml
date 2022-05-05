@@ -34,6 +34,7 @@ jobs:
       run: |
         sudo useradd -m ec2-user
         sudo su -l ec2-user
+        id
         IP_ADDRESS=`aws ec2 describe-instances --filters "Name=tag:Name,Values=rocinante" --query "Reservations[*].Instances[*].{IP:PublicIpAddress}" --output text`
         echo "${{ secrets.SSH_KEY }}" > rocinante_ssh.key
         echo "${{ secrets.REAL_KEY }}" > real_rocinante.key
