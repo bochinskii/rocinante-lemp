@@ -12,6 +12,10 @@ env:
 jobs:
 
   CI_part:
+  
+    env:
+        SSL_CERT: rocinante.crt
+        SSL_KEY: rocinante.key
 
     runs-on: ubuntu-latest
 
@@ -27,6 +31,11 @@ jobs:
         aws-secret-access-key: ${{ secrets.GH_ACTION_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION_NAME }}
     
+    - name: Preper certs
+      run: |
+        echo "${{ secrets.REAL_KEY }}" > real_rocinante.key
+        chmod 0600 real_rocinante.key
+    
     - name: Get Variables
       run: |
         IP_ADDRESS=`aws ec2 describe-instances --filters "Name=tag:Name,Values=rocinante" --query "Reservations[*].Instances[*].{IP:PublicIpAddress}" --output text`
@@ -39,6 +48,5 @@ jobs:
         username: ec2-user
         port: ${{ secrets.SSH_PORT }}
         key: ${{ secrets.SSH_KEY }}
-        source: "configs/*"
+        source: "configs/*,real_rocinante.cert,real_rocinante.key"
         target: "/home/ec2-user"
-        strip_components: 1
