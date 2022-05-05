@@ -1,7 +1,8 @@
 <h1>Проект "Rocinante"</h1><br>
 <br>
 <p>
-С помощью GitHub Action происходит установка LEMP при изменении userd_data.sh.raw скрипта.
+С помощью GitHub Action происходит установка LEMP. Происходит это на основе user data скрипта, который находится в "секрете" - USER_DATA_SCRIPT.<br>
+user_data.sh.raw - это шаблон данного user data скрипта.
 </p>
 <p>
 Так же, после установки lemp происходит "заливка" сертификатов для HTTPS
