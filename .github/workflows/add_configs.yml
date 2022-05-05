@@ -32,10 +32,8 @@ jobs:
         SSL_CERT: rocinante.crt
         SSL_KEY: rocinante.key
       run: |
-        sudo su -l root
-        useradd -m ec2-user
-        echo -e "$USER_PASSWD\n$USER_PASSWD" | passwd Port67
-        su -l ec2-user
+        sudo useradd -m ec2-user
+        sudo su -l ec2-user
         IP_ADDRESS=`aws ec2 describe-instances --filters "Name=tag:Name,Values=rocinante" --query "Reservations[*].Instances[*].{IP:PublicIpAddress}" --output text`
         echo "${{ secrets.SSH_KEY }}" > rocinante_ssh.key
         echo "${{ secrets.REAL_KEY }}" > real_rocinante.key
