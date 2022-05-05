@@ -69,13 +69,13 @@ jobs:
           sudo rm -f /etc/nginx/nginx.conf
           sudo rm -f /etc/nginx/tls/${{ env.SSL_CERT }}
           sudo rm -f /etc/nginx/tls/${{ env.SSL_KEY }}
-          sudo mv ./configs/my.cnf /etc/
-          sudo mv ./configs/php.ini /etc/
-          sudo mv ./configs/nginx.conf /etc/nginx/"
-          sudo mv ./configs/{basic.conf,gzip.conf,limits.conf,tls.conf,zone_limits.conf} /etc/nginx/conf.d/"
-          sudo mv ./configs/nginx.conf /etc/nginx/
-          sudo mv ./real_rocinante.cert /etc/nginx/tls/${{ env.SSL_CERT }}
-          sudo mv ./real_rocinante.key /etc/nginx/tls/${{ env.SSL_KEY }}"
+          sudo mv /home/ec2-user/configs/my.cnf /etc/
+          sudo mv /home/ec2-user/configs/php.ini /etc/
+          sudo mv /home/ec2-user/configs/nginx.conf /etc/nginx/"
+          sudo mv /home/ec2-user/configs/{basic.conf,gzip.conf,limits.conf,tls.conf,zone_limits.conf} /etc/nginx/conf.d/"
+          sudo mv /home/ec2-user/configs/nginx.conf /etc/nginx/
+          sudo mv /home/ec2-user/real_rocinante.cert /etc/nginx/tls/${{ env.SSL_CERT }}
+          sudo mv /home/ec2-user/real_rocinante.key /etc/nginx/tls/${{ env.SSL_KEY }}"
           sudo systemctl start mysqld
           sudo systemctl start php-fpm
           sudo systemctl start nginx
