@@ -1,7 +1,7 @@
-<h1>Проект "Rocinante"</h1><br>
+<h1>Проект "Rocinante LEMP"</h1><br>
 <br>
 <p>
-С помощью GitHub Action - Deploy_lemp происходит установка LEMP. Происходит это на основе user data скрипта, который находится в "секрете" - USER_DATA_SCRIPT. Файл user_data.sh.raw - это шаблон данного user data скрипта.
+С помощью GitHub Action - Deploy_lemp происходит установка LEMP с установленной CMS Drupal 9. Происходит это на основе user data скрипта, который находится в "секрете" - USER_DATA_SCRIPT. Файл user_data.sh.raw - это шаблон данного user data скрипта.
 </p>
 <p>
 С помощью GitHub Action - Add_configs происходит тонкая настройка сервисов, путем добавление или изменения конфигурационных файлов.
