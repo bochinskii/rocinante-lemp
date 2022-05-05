@@ -33,7 +33,6 @@ jobs:
         SSL_KEY: rocinante.key
       run: |
         IP_ADDRESS=`aws ec2 describe-instances --filters "Name=tag:Name,Values=rocinante" --query "Reservations[*].Instances[*].{IP:PublicIpAddress}" --output text`
-        ec2-user@$IP_ADDRESS:/home/ec2-user
         echo "${{ secrets.SSH_KEY }}" > rocinante_ssh.key
         echo "${{ secrets.REAL_KEY }}" > real_rocinante.key
         chmod 0600 rocinante_ssh.key
