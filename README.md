@@ -1,5 +1,4 @@
 <h1>Проект "Rocinante LEMP"</h1><br>
-<br>
 <p>
 С помощью GitHub Action - Deploy_lemp_auto устанавливается LEMP с CMS Drupal 9. Происходит это на основе user data скрипта - user.data.sh.raw. С помощью данного action'а заменяются все необходимые переменные и данный файл в base64 кодировке используется при разворачивании LEMP.
 </p>
@@ -34,6 +33,7 @@ Status of our Actions:
 <img src="https://github.com/bochinskii/rocinante-lemp/workflows/Deploy_lemp_auto/badge.svg?branch=main"><br>
 <img src="https://github.com/bochinskii/rocinante-lemp/workflows/add_configs_v2/badge.svg?branch=main"><br>
 <img src="https://github.com/bochinskii/rocinante-lemp/workflows/Add_configs/badge.svg?branch=main"><br>
+<br>
 <p>
 Denis Bochinskii
 </p>
