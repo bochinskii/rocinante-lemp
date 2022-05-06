@@ -8,7 +8,7 @@ on:
 
 env:
   AWS_REGION_NAME: "eu-central-1"
-  AMI: ami-05f5f4f906feab6a7
+  # AMI: ami-05f5f4f906feab6a7
 
 jobs:
 
