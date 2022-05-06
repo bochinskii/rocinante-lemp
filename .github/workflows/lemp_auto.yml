@@ -14,6 +14,7 @@ jobs:
   CI_part:
     
     env:
+      HOSTNAME: rocinante
       MYSQL_REPO: https://dev.mysql.com/get/mysql80-community-release-el7-6.noarch.rpm
       SSL_CERT: rocinante.crt
       SSL_KEY: rocinante.key
@@ -35,7 +36,7 @@ jobs:
     
     - name: Prepere user data script
       run: |
-        sudo sed -i "s/^export HOSTNAME=.*/export HOSTNAME=${{ secrets.HOSTNAME }}/g" ./user_data.sh.raw
+        sudo sed -i "s/^export HOSTNAME=.*/export HOSTNAME=${{ env.HOSTNAME }}/g" ./user_data.sh.raw
         sudo sed -i "s%^export TIMEZONE=.*%export TIMEZONE=${{ secrets.TIMEZONE }}%g" ./user_data.sh.raw
         sudo sed -i "s/^export SSH_PORT=.*/export SSH_PORT=${{ secrets.SSH_PORT }}/g" ./user_data.sh.raw
         sudo sed -i "s%^export MYSQL_REPO=.*%export MYSQL_REPO=${{ env.MYSQL_REPO }}%g" ./user_data.sh.raw
