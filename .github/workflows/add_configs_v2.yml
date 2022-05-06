@@ -80,6 +80,7 @@ jobs:
           sudo mv /home/ec2-user/configs/nginx.conf /etc/nginx/
           sudo mv /home/ec2-user/real_rocinante.cert /etc/nginx/tls/${{ env.SSL_CERT }}
           sudo mv /home/ec2-user/real_rocinante.key /etc/nginx/tls/${{ env.SSL_KEY }}
+          sudo rm -fr /home/ec2-user/configs
           sudo systemctl start mysqld
           sudo systemctl start php-fpm
           sudo systemctl start nginx
