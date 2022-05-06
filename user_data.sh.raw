@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/sh
 #
 # Hostname
 #
@@ -9,8 +9,8 @@ hostnamectl set-hostname $HOSTNAME
 #
 # Update repos
 #
-#yum makecache
-#yum update -y
+yum makecache
+yum update -y
 
 #
 # Timezone
