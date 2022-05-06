@@ -1,4 +1,4 @@
-name: Deploy_lemp
+name: Deploy_lemp_auto
 
 on:
   workflow_dispatch:
@@ -13,6 +13,12 @@ jobs:
 
   CI_part:
     
+    env:
+      MYSQL_REPO: https://dev.mysql.com/get/mysql80-community-release-el7-6.noarch.rpm
+      SSL_CERT: rocinante.crt
+      SSL_KEY: rocinante.key
+      SITE_CONFIG: rocinante.conf
+     
     runs-on: ubuntu-latest
 
     steps:
@@ -26,6 +32,24 @@ jobs:
         aws-access-key-id: ${{ secrets.GH_ACTION_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.GH_ACTION_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION_NAME }}
+    
+    - name: Prepere user data script
+      run: |
+        sudo sed -i "s/^export HOSTNAME=.*/export HOSTNAME=${{ secrets.HOSTNAME }}/g" ./user_data.sh.raw
+        sudo sed -i "s%^export TIMEZONE=.*%export TIMEZONE=${{ secrets.TIMEZONE }}%g" ./user_data.sh.raw
+        sudo sed -i "s/^export SSH_PORT=.*/export SSH_PORT=${{ secrets.SSH_PORT }}/g" ./user_data.sh.raw
+        sudo sed -i "s%^export MYSQL_REPO=.*%export MYSQL_REPO=${{ env.MYSQL_REPO }}%g" ./user_data.sh.raw
+        sudo sed -i "s/^export MYSQL_ROOT_PASS=.*/export MYSQL_ROOT_PASS=${{ secrets.MYSQL_ROOT_PASS }}/g" ./user_data.sh.raw
+        sudo sed -i "s/^export MYSQL_ADMIN_USER=.*/export MYSQL_ADMIN_USER=${{ secrets.MYSQL_ADMIN_USER }}/g" ./user_data.sh.raw
+        sudo sed -i "s/^export MYSQL_ADMIN_USER_PASS=.*/export MYSQL_ADMIN_USER_PASS=${{ secrets.MYSQL_ADMIN_USER_PASS }}/g" ./user_data.sh.raw
+        sudo sed -i "s/^export MYSQL_DRUPAL_USER=.*/export MYSQL_DRUPAL_USER=${{ secrets.MYSQL_DRUPAL_USER }}/g" ./user_data.sh.raw
+        sudo sed -i "s/^export MYSQL_DRUPAL_USER_PASS=.*/export MYSQL_DRUPAL_USER_PASS=${{ secrets.MYSQL_DRUPAL_USER_PASS }}/g" ./user_data.sh.raw
+        sudo sed -i "s/^export MYSQL_DRUPAL_DB=.*/export MYSQL_DRUPAL_DB=${{ secrets.MYSQL_DRUPAL_DB}}/g" ./user_data.sh.raw
+        sudo sed -i "s/^export SSL_CERT=.*/export SSL_CERT=${{ env.SSL_CERT }}/g" ./user_data.sh.raw
+        sudo sed -i "s/^export SSL_KEY=.*/export SSL_KEY=${{ env.SSL_KEY }}/g" ./user_data.sh.raw
+        sudo sed -i "s/^export SITE_DIR=.*/export SITE_DIR=${{ secrets.SITE_DIR }}/g" ./user_data.sh.raw
+        sudo sed -i "s/^export SITE_CONFIG=.*/export SITE_CONFIG=${{ env.SITE_CONFIG }}/g" ./user_data.sh.raw
+        base64 user_data.sh.raw > user_data.base64.sh
     
     - name: Create LEMP
       run: |
