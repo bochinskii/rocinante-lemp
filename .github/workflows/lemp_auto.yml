@@ -52,12 +52,11 @@ jobs:
         sudo sed -i "s/^export SSL_KEY=.*/export SSL_KEY=${{ env.SSL_KEY }}/g" ./user_data.sh.raw
         sudo sed -i "s%^export SITE_DIR=.*%export SITE_DIR=${{ secrets.SITE_DIR }}%g" ./user_data.sh.raw
         sudo sed -i "s/^export SITE_CONFIG=.*/export SITE_CONFIG=${{ env.SITE_CONFIG }}/g" ./user_data.sh.raw
-        base64 user_data.sh.raw > user_data.base64.sh
+        sudo base64 user_data.sh.raw > user_data.base64.sh
     
     - name: Create LEMP
       run: |
-        echo "${{ secrets.USER_DATA_SCRIPT }}" > user_data.base64.sh
-        aws ec2 run-instances --count 1 \
+        sudo aws ec2 run-instances --count 1 \
         --image-id ${{ env.AMI }} \
         --instance-type t2.micro --subnet-id subnet-000c2008b7496a3b7 \
         --associate-public-ip-address \
