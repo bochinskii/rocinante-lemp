@@ -1,7 +1,7 @@
 <h1>Проект "Rocinante LEMP"</h1><br>
 <br>
 <p>
-С помощью GitHub Action - Deploy_lemp происходит установка LEMP с установленной CMS Drupal 9. Происходит это на основе user data скрипта, который находится в "секрете" - USER_DATA_SCRIPT. Файл user_data.sh.raw - это шаблон данного user data скрипта.
+С помощью GitHub Action - Deploy_lemp_auto устанавливается LEMP с CMS Drupal 9. Происходит это на основе user data скрипта - user.data.sh.raw. С помощью данного action'а заменяются все необходимые переменные и данный файл в base64 кодировке используется при разворачивании LEMP.
 </p>
 <p>
 С помощью GitHub Action - Add_configs (add_configs_v2) происходит тонкая настройка сервисов, путем добавление или изменения конфигурационных файлов.
@@ -21,7 +21,6 @@ REAL_KEY - ключ сертификата, который будет в про�
 <p>
 Status of our Actions:
 </p>
-<img src="https://github.com/bochinskii/rocinante-lemp/workflows/Deploy_lemp/badge.svg?branch=main"><br>
 <img src="https://github.com/bochinskii/rocinante-lemp/workflows/Deploy_lemp_auto/badge.svg?branch=main"><br>
 <img src="https://github.com/bochinskii/rocinante-lemp/workflows/add_configs_v2/badge.svg?branch=main"><br>
 <img src="https://github.com/bochinskii/rocinante-lemp/workflows/Add_configs/badge.svg?branch=main"><br>
