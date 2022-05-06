@@ -10,7 +10,7 @@ hostnamectl set-hostname $HOSTNAME
 # Update repos
 #
 yum makecache
-yum update -y
+# yum update -y
 
 #
 # Timezone
