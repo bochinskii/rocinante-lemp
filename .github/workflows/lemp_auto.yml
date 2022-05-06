@@ -38,25 +38,25 @@ jobs:
     
     - name: Prepere user data script
       run: |
-        sudo sed -i "s/^export HOSTNAME=.*/export HOSTNAME=${{ env.HOSTNAME }}/g" ./user_data.sh.raw
-        sudo sed -i "s%^export TIMEZONE=.*%export TIMEZONE=${{ env.TIMEZONE }}%g" ./user_data.sh.raw
-        sudo sed -i "s/^export SSH_PORT=.*/export SSH_PORT=${{ secrets.SSH_PORT }}/g" ./user_data.sh.raw
-        sudo sed -i "s%^export MYSQL_REPO=.*%export MYSQL_REPO=${{ env.MYSQL_REPO }}%g" ./user_data.sh.raw
-        sudo sed -i "s/^export MYSQL_ROOT_PASS=.*/export MYSQL_ROOT_PASS=${{ secrets.MYSQL_ROOT_PASS }}/g" ./user_data.sh.raw
-        sudo sed -i "s/^export MYSQL_ADMIN_USER=.*/export MYSQL_ADMIN_USER=${{ secrets.MYSQL_ADMIN_USER }}/g" ./user_data.sh.raw
-        sudo sed -i "s/^export MYSQL_ADMIN_USER_PASS=.*/export MYSQL_ADMIN_USER_PASS=${{ secrets.MYSQL_ADMIN_USER_PASS }}/g" ./user_data.sh.raw
-        sudo sed -i "s/^export MYSQL_DRUPAL_USER=.*/export MYSQL_DRUPAL_USER=${{ secrets.MYSQL_DRUPAL_USER }}/g" ./user_data.sh.raw
-        sudo sed -i "s/^export MYSQL_DRUPAL_USER_PASS=.*/export MYSQL_DRUPAL_USER_PASS=${{ secrets.MYSQL_DRUPAL_USER_PASS }}/g" ./user_data.sh.raw
-        sudo sed -i "s/^export MYSQL_DRUPAL_DB=.*/export MYSQL_DRUPAL_DB=${{ secrets.MYSQL_DRUPAL_DB}}/g" ./user_data.sh.raw
-        sudo sed -i "s/^export SSL_CERT=.*/export SSL_CERT=${{ env.SSL_CERT }}/g" ./user_data.sh.raw
-        sudo sed -i "s/^export SSL_KEY=.*/export SSL_KEY=${{ env.SSL_KEY }}/g" ./user_data.sh.raw
-        sudo sed -i "s%^export SITE_DIR=.*%export SITE_DIR=${{ secrets.SITE_DIR }}%g" ./user_data.sh.raw
-        sudo sed -i "s/^export SITE_CONFIG=.*/export SITE_CONFIG=${{ env.SITE_CONFIG }}/g" ./user_data.sh.raw
-        sudo base64 user_data.sh.raw > user_data.base64.sh
+        sed -i "s/^export HOSTNAME=.*/export HOSTNAME=${{ env.HOSTNAME }}/g" ./user_data.sh.raw
+        sed -i "s%^export TIMEZONE=.*%export TIMEZONE=${{ env.TIMEZONE }}%g" ./user_data.sh.raw
+        sed -i "s/^export SSH_PORT=.*/export SSH_PORT=${{ secrets.SSH_PORT }}/g" ./user_data.sh.raw
+        sed -i "s%^export MYSQL_REPO=.*%export MYSQL_REPO=${{ env.MYSQL_REPO }}%g" ./user_data.sh.raw
+        sed -i "s/^export MYSQL_ROOT_PASS=.*/export MYSQL_ROOT_PASS=${{ secrets.MYSQL_ROOT_PASS }}/g" ./user_data.sh.raw
+        sed -i "s/^export MYSQL_ADMIN_USER=.*/export MYSQL_ADMIN_USER=${{ secrets.MYSQL_ADMIN_USER }}/g" ./user_data.sh.raw
+        sed -i "s/^export MYSQL_ADMIN_USER_PASS=.*/export MYSQL_ADMIN_USER_PASS=${{ secrets.MYSQL_ADMIN_USER_PASS }}/g" ./user_data.sh.raw
+        sed -i "s/^export MYSQL_DRUPAL_USER=.*/export MYSQL_DRUPAL_USER=${{ secrets.MYSQL_DRUPAL_USER }}/g" ./user_data.sh.raw
+        sed -i "s/^export MYSQL_DRUPAL_USER_PASS=.*/export MYSQL_DRUPAL_USER_PASS=${{ secrets.MYSQL_DRUPAL_USER_PASS }}/g" ./user_data.sh.raw
+        sed -i "s/^export MYSQL_DRUPAL_DB=.*/export MYSQL_DRUPAL_DB=${{ secrets.MYSQL_DRUPAL_DB}}/g" ./user_data.sh.raw
+        sed -i "s/^export SSL_CERT=.*/export SSL_CERT=${{ env.SSL_CERT }}/g" ./user_data.sh.raw
+        sed -i "s/^export SSL_KEY=.*/export SSL_KEY=${{ env.SSL_KEY }}/g" ./user_data.sh.raw
+        sed -i "s%^export SITE_DIR=.*%export SITE_DIR=${{ secrets.SITE_DIR }}%g" ./user_data.sh.raw
+        sed -i "s/^export SITE_CONFIG=.*/export SITE_CONFIG=${{ env.SITE_CONFIG }}/g" ./user_data.sh.raw
+        base64 user_data.sh.raw > user_data.base64.sh
     
     - name: Create LEMP
       run: |
-        sudo aws ec2 run-instances --count 1 \
+        aws ec2 run-instances --count 1 \
         --image-id ${{ env.AMI }} \
         --instance-type t2.micro --subnet-id subnet-000c2008b7496a3b7 \
         --associate-public-ip-address \
