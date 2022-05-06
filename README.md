@@ -22,6 +22,7 @@ REAL_KEY - ключ сертификата, который будет в про�
 Status of our Actions:
 </p>
 <img src="https://github.com/bochinskii/rocinante-lemp/workflows/Deploy_lemp/badge.svg?branch=main"><br>
+<img src="https://github.com/bochinskii/rocinante-lemp/workflows/Deploy_lemp_auto/badge.svg?branch=main"><br>
 <img src="https://github.com/bochinskii/rocinante-lemp/workflows/add_configs_v2/badge.svg?branch=main"><br>
 <img src="https://github.com/bochinskii/rocinante-lemp/workflows/Add_configs/badge.svg?branch=main"><br>
 <p>
