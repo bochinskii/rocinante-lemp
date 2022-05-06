@@ -57,7 +57,8 @@ jobs:
     - name: Create LEMP
       run: |
         echo "${{ secrets.USER_DATA_SCRIPT }}" > user_data.base64.sh
-        aws ec2 run-instances --count 1 --image-id ${{ env.AMI }} \
+        aws ec2 run-instances --count 1 \
+        --image-id $(aws ssm get-parameters --names /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2 --region eu-central-1 --query 'Parameters[0].[Value]' --output text) \
         --instance-type t2.micro --subnet-id subnet-000c2008b7496a3b7 \
         --associate-public-ip-address \
         --security-group-ids sg-061ddb8453ccbf935 sg-004c28689f21a4a77 --key-name bochinskii_Frankfurt_2 \
