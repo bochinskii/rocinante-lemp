@@ -67,7 +67,7 @@ yum makecache
 yum install --nogpgcheck  mysql-community-server -y
 systemctl start mysqld; sudo systemctl enable mysqld
 
-export MYSQL_TEMP_PASS=`sudo grep 'temporary password' /var/log/mysqld.log | cut -d: -f4 | cut -b 2-`
+export MYSQL_TEMP_PASS=`grep 'temporary password' /var/log/mysqld.log | cut -d " " -f13`
 export MYSQL_ROOT_PASS=
 
 # Secure installation

@@ -25,13 +25,12 @@ MYSQL_DRUPAL_DB - база данных сайта;<br>
 MYSQL_DRUPAL_USER - пользователь базы данных сайта;<br>
 MYSQL_DRUPAL_USER_PASS - пароль пользователя базы данных сайта;<br>
 <br>
-SITE_DIR - префикс директории с сайтом; 
+SITE_DIR - префикс директории с сайтом;
 </p>
 <p>
 Status of our Actions:
 </p>
-<img src="https://github.com/bochinskii/rocinante-lemp/workflows/Deploy_lemp_auto/badge.svg?branch=main"><br>
-<img src="https://github.com/bochinskii/rocinante-lemp/workflows/add_configs_v2/badge.svg?branch=main"><br>
+<img src="https://github.com/bochinskii/rocinante-lemp/workflows/lemp/badge.svg?branch=main"><br>
 <img src="https://github.com/bochinskii/rocinante-lemp/workflows/Add_configs/badge.svg?branch=main"><br>
 <br>
 <p>
