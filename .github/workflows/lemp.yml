@@ -64,7 +64,7 @@ jobs:
         --image-id ${{ env.AMI }} \
         --instance-type t2.micro --subnet-id subnet-000c2008b7496a3b7 \
         --associate-public-ip-address \
-        --security-group-ids sg-061ddb8453ccbf935 sg-004c28689f21a4a77 --key-name bochinskii_Frankfurt_2 \
+        --security-group-ids sg-06107067cad8daf95 sg-0c32ae9e1eefc057a --key-name bochinskii_Frankfurt_2 \
         --user-data file://user_data.base64.sh \
         --block-device-mappings file://block_device_mappings.json \
         --tag-specifications file://tag_specifications.json
