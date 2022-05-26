@@ -373,7 +373,7 @@ cat << EOF > /etc/logrotate.d/php-fpm
 }
 EOF
 
-sudo cat << EOF > /etc/logrotate.d/mysql
+cat << EOF > /etc/logrotate.d/mysql
 /var/log/mysqld.log {
     create 640 mysql mysql
     notifempty
@@ -392,3 +392,17 @@ sudo cat << EOF > /etc/logrotate.d/mysql
     endscript
 }
 EOF
+
+#
+# Configs
+#
+
+rm -f /etc/nginx/tls/{$SSL_CERT,$SSL_KEY}
+find /home/ec2-user/configs -type f -name "*.conf" ! -name nginx.conf -exec cp -f {} /etc/nginx/conf.d/ \;
+cp -f /home/ec2-user/configs/nginx.conf /etc/nginx/
+cp -f /home/ec2-user/configs/{my.cnf,php.ini} /etc/
+cp -f /home/ec2-user/configs/{$SSL_CERT,$SSL_KEY} /etc/nginx/tls
+chmod 0400 /etc/nginx/tls/$SSL_KEY
+systemctl restart mysqld
+systemctl restart php-fpm
+systemctl restart nginx

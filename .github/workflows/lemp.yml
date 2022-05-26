@@ -1,0 +1,89 @@
+name: lemp
+
+on:
+  workflow_dispatch:
+  #push:
+    #branches:
+      #- main
+
+env:
+  AWS_REGION_NAME: "eu-central-1"
+  AMI: ami-05f5f4f906feab6a7
+
+jobs:
+
+  CI_part:
+
+    env:
+      HOSTNAME: rocinante
+      TIMEZONE: Europe/Berlin
+      MYSQL_REPO: https://dev.mysql.com/get/mysql80-community-release-el7-6.noarch.rpm
+      SSL_CERT: rocinante.crt
+      SSL_KEY: rocinante.key
+      SITE_CONFIG: rocinante.conf
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Clone repository
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.GH_ACTION_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.GH_ACTION_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION_NAME }}
+
+    - name: Preper SSL key for HTTPS
+      run: |
+        echo "${{ secrets.REAL_KEY }}" > ./configs/${{ env.SSL_KEY }}
+
+    - name: Prepere user data script
+      run: |
+        sed -i "s/^export HOSTNAME=.*/export HOSTNAME=${{ env.HOSTNAME }}/g" ./user_data.sh.raw
+        sed -i "s%^export TIMEZONE=.*%export TIMEZONE=${{ env.TIMEZONE }}%g" ./user_data.sh.raw
+        sed -i "s/^export SSH_PORT=.*/export SSH_PORT=${{ secrets.SSH_PORT }}/g" ./user_data.sh.raw
+        sed -i "s%^export MYSQL_REPO=.*%export MYSQL_REPO=${{ env.MYSQL_REPO }}%g" ./user_data.sh.raw
+        sed -i "s/^export MYSQL_ROOT_PASS=.*/export MYSQL_ROOT_PASS=${{ secrets.MYSQL_ROOT_PASS }}/g" ./user_data.sh.raw
+        sed -i "s/^export MYSQL_ADMIN_USER=.*/export MYSQL_ADMIN_USER=${{ secrets.MYSQL_ADMIN_USER }}/g" ./user_data.sh.raw
+        sed -i "s/^export MYSQL_ADMIN_USER_PASS=.*/export MYSQL_ADMIN_USER_PASS=${{ secrets.MYSQL_ADMIN_USER_PASS }}/g" ./user_data.sh.raw
+        sed -i "s/^export MYSQL_DRUPAL_USER=.*/export MYSQL_DRUPAL_USER=${{ secrets.MYSQL_DRUPAL_USER }}/g" ./user_data.sh.raw
+        sed -i "s/^export MYSQL_DRUPAL_USER_PASS=.*/export MYSQL_DRUPAL_USER_PASS=${{ secrets.MYSQL_DRUPAL_USER_PASS }}/g" ./user_data.sh.raw
+        sed -i "s/^export MYSQL_DRUPAL_DB=.*/export MYSQL_DRUPAL_DB=${{ secrets.MYSQL_DRUPAL_DB}}/g" ./user_data.sh.raw
+        sed -i "s/^export SSL_CERT=.*/export SSL_CERT=${{ env.SSL_CERT }}/g" ./user_data.sh.raw
+        sed -i "s/^export SSL_KEY=.*/export SSL_KEY=${{ env.SSL_KEY }}/g" ./user_data.sh.raw
+        sed -i "s%^export SITE_DIR=.*%export SITE_DIR=${{ secrets.SITE_DIR }}%g" ./user_data.sh.raw
+        sed -i "s/^export SITE_CONFIG=.*/export SITE_CONFIG=${{ env.SITE_CONFIG }}/g" ./user_data.sh.raw
+        base64 user_data.sh.raw > user_data.base64.sh
+
+    - name: Create LEMP
+      run: |
+        aws ec2 run-instances --count 1 \
+        --image-id ${{ env.AMI }} \
+        --instance-type t2.micro --subnet-id subnet-000c2008b7496a3b7 \
+        --associate-public-ip-address \
+        --security-group-ids sg-061ddb8453ccbf935 sg-004c28689f21a4a77 --key-name bochinskii_Frankfurt_2 \
+        --user-data file://user_data.base64.sh \
+        --block-device-mappings file://block_device_mappings.json \
+        --tag-specifications file://tag_specifications.json
+
+    - name: Get IP Address
+      run: |
+        IP_ADDRESS=`aws ec2 describe-instances --filters "Name=tag:Name,Values=rocinante" --query "Reservations[*].Instances[*].{IP:PublicIpAddress}" --output text | grep -E "([0-9]{1,3}[\.]){3}[0-9]{1,3}$"`
+        echo "$IP_ADDRESS"
+        echo "IP_ADDRESS=$IP_ADDRESS" >> $GITHUB_ENV
+
+    - name: Test variable with ip address
+      run: echo ${{ env.IP_ADDRESS }}
+
+    - name: copy file via ssh key
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ env.IP_ADDRESS }}
+        username: ec2-user
+        port: ${{ secrets.SSH_PORT }}
+        key: ${{ secrets.SSH_KEY }}
+        source: "configs/*"
+        target: "/home/ec2-user"

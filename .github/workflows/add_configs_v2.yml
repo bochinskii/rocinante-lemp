@@ -12,7 +12,7 @@ env:
 jobs:
 
   CI_part:
-  
+
     env:
         SSL_CERT: rocinante.crt
         SSL_KEY: rocinante.key
@@ -30,21 +30,21 @@ jobs:
         aws-access-key-id: ${{ secrets.GH_ACTION_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.GH_ACTION_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION_NAME }}
-    
+
     - name: Preper certs
       run: |
         echo "${{ secrets.REAL_KEY }}" > real_rocinante.key
         chmod 0600 real_rocinante.key
-    
+
     - name: Get Variables
       run: |
         IP_ADDRESS=`aws ec2 describe-instances --filters "Name=tag:Name,Values=rocinante" --query "Reservations[*].Instances[*].{IP:PublicIpAddress}" --output text | grep -E "([0-9]{1,3}[\.]){3}[0-9]{1,3}$"`
         echo "$IP_ADDRESS"
         echo "IP_ADDRESS=$IP_ADDRESS" >> $GITHUB_ENV
-    
+
     - name: Test
       run: echo ${{ env.IP_ADDRESS }}
-      
+
     - name: copy file via ssh key
       uses: appleboy/scp-action@master
       with:
@@ -54,7 +54,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         source: "configs/*,real_rocinante.cert,real_rocinante.key"
         target: "/home/ec2-user"
-    
+
     - name: multiple command
       uses: appleboy/ssh-action@master
       with:
