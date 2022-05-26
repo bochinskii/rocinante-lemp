@@ -71,7 +71,7 @@ jobs:
         echo "########################"
         echo "Wait pending time"
         echo "########################"
-        sleep 15s
+        sleep 20s
 
 
     - name: Get IP Address
