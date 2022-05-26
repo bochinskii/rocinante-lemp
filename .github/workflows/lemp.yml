@@ -68,6 +68,11 @@ jobs:
         --user-data file://user_data.base64.sh \
         --block-device-mappings file://block_device_mappings.json \
         --tag-specifications file://tag_specifications.json
+        echo "########################"
+        echo "Wait pending time"
+        echo "########################"
+        sleep 15s
+
 
     - name: Get IP Address
       run: |
